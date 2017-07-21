@@ -1,5 +1,5 @@
 from django.core.validators import EMPTY_VALUES
-import collections.OrderedDict
+import collections
 
 
 class PrimaryKeyRelatedField(object):
@@ -114,7 +114,7 @@ class CheckingModelMixin(object):
         """
         Returns the set of fields on which we perform checkings
         """
-        ret = OrderedDict()
+        ret = collections.OrderedDict()
         for f in self._meta.fields:
             # avoid special_exclude fields
             if f.attname in special_exclude:
@@ -135,7 +135,7 @@ class CheckingModelMixin(object):
 
         # If 'fields' is specified, use those fields, in that order.
         if self.opts.fields:
-            new = OrderedDict()
+            new = collections.OrderedDict()
             for key in self.opts.fields:
                 new[key] = ret[key]
             ret = new
