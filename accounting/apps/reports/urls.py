@@ -1,9 +1,9 @@
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 
 from . import views
 
 
-urlpatterns = patterns('',
+urlpatterns = [
 
     # Reports
     url(r'^report/$',
@@ -35,4 +35,4 @@ urlpatterns = patterns('',
     url(r'^settings/payrun/$',
         views.PayRunSettingsUpdateView.as_view(),
         name="settings-payrun"),
-)
+]
