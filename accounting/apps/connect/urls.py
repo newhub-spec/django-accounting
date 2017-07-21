@@ -1,9 +1,9 @@
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 
 from . import views
 
 
-urlpatterns = patterns('',
+urlpatterns = [
 
     url(r'^$',
         views.RootRedirectionView.as_view(),
@@ -13,4 +13,4 @@ urlpatterns = patterns('',
     url(r'^getting-started/$',
         views.GettingStartedView.as_view(),
         name="getting-started")
-)
+]
