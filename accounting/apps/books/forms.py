@@ -1,6 +1,8 @@
 from django.forms import ModelForm, BaseInlineFormSet
 from django.forms.models import inlineformset_factory
 
+from accounting.apps.people.models import Client, Employee
+
 from .models import (
     Organization,
     TaxRate,
@@ -14,10 +16,9 @@ from .models import (
     ExpenseClaimLine,
     Payment)
 from .utils import organization_manager
-from accounting.apps.people.models import Client, Employee
 from accounting.apps.people.forms import UserMultipleChoices
 
-from django_select2 import ModelSelect2MultipleWidget
+from django_select2.forms import ModelSelect2MultipleWidget
 from datetimewidget.widgets import DateWidget
 
 
@@ -28,7 +29,7 @@ class RequiredFirstInlineFormSet(BaseInlineFormSet):
         make-first-required/4951032#4951032
     """
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+        super(RequiredFirstInlineFormSet, self).__init__(*args, **kwargs)
         if len(self.forms) > 0:
             first_form = self.forms[0]
             first_form.empty_permitted = False
@@ -38,7 +39,7 @@ class SaleInlineLineFormSet(RequiredFirstInlineFormSet):
 
     def __init__(self, *args, **kwargs):
         orga = kwargs.pop('organization')
-        super().__init__(*args, **kwargs)
+        super(SaleInlineLineFormSet, self).__init__(*args, **kwargs)
         for f in self.forms:
             f.restrict_to_organization(orga)
 
@@ -50,7 +51,7 @@ class ClientForOrganizationChoices(ModelSelect2MultipleWidget):
 
     def prepare_qs_params(self, request, search_term, search_fields):
         """restrict to the current selected organization"""
-        params = super().prepare_qs_params(request, search_term, search_fields)
+        params = super(ClientForOrganizationChoices, self).prepare_qs_params(request, search_term, search_fields)
         orga = organization_manager.get_selected_organization(request)
         params['and']['organization'] = orga
         return params
@@ -65,7 +66,7 @@ class EmployeeForOrganizationChoices(ModelSelect2MultipleWidget):
 
     def prepare_qs_params(self, request, search_term, search_fields):
         """restrict to the current selected organization"""
-        params = super().prepare_qs_params(request, search_term, search_fields)
+        params = super(EmployeeForOrganizationChoices, self).prepare_qs_params(request, search_term, search_fields)
         orga = organization_manager.get_selected_organization(request)
         params['and']['organization'] = orga
         return params
@@ -95,7 +96,7 @@ class TaxRateForm(ModelForm):
 class RestrictLineFormToOrganizationMixin(object):
 
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+        super(RestrictLineFormToOrganizationMixin, self).__init__(*args, **kwargs)
         instance = kwargs.get('instance', None)
         if instance:
             if isinstance(instance, InvoiceLine):
@@ -243,7 +244,7 @@ class BillLineForm(RestrictLineFormToOrganizationMixin,
         )
 
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+        super(BillLineForm, self).__init__(*args, **kwargs)
 
 
 BillLineFormSet = inlineformset_factory(Bill,
@@ -292,7 +293,7 @@ class ExpenseClaimLineForm(RestrictLineFormToOrganizationMixin,
         )
 
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+        super(ExpenseClaimLineForm, self).__init__(*args, **kwargs)
 
 
 ExpenseClaimLineFormSet = inlineformset_factory(ExpenseClaim,

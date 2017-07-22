@@ -39,7 +39,7 @@ class BaseStep(object):
         description = None
 
     def __init__(self, user):
-        super().__init__()
+        super(BaseStep, self).__init__()
         self.opts = self._options_class(getattr(self, 'StepOptions', None))
         self.user = user
 

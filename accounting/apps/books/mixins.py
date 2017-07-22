@@ -22,7 +22,7 @@ class RestrictToSelectedOrganizationQuerySetMixin(object):
 
     def get_queryset(self):
         filters = self.get_restriction_filters()
-        queryset = super().get_queryset()
+        queryset = super(RestrictToSelectedOrganizationQuerySetMixin, self).get_queryset()
         queryset = queryset.filter(**filters)
         return queryset
 
@@ -30,7 +30,7 @@ class RestrictToSelectedOrganizationQuerySetMixin(object):
         orga = organization_manager.get_selected_organization(request)
         if orga is None:
             return HttpResponseRedirect(reverse('books:organization-selector'))
-        return super().get(request, *args, **kwargs)
+        return super(RestrictToSelectedOrganizationQuerySetMixin, self).get(request, *args, **kwargs)
 
 
 class RestrictToOrganizationFormRelationsMixin(object):
@@ -67,7 +67,7 @@ class RestrictToOrganizationFormRelationsMixin(object):
 class SaleListQuerySetMixin(object):
 
     def get_queryset(self):
-        queryset = super().get_queryset()
+        queryset = super(SaleListQuerySetMixin, self).get_queryset()
         queryset = (queryset
             .select_related(
                 'organization')
@@ -99,7 +99,7 @@ class AutoSetSelectedOrganizationMixin(object):
         orga = organization_manager.get_selected_organization(self.request)
         obj.organization = orga
 
-        return super().form_valid(form)
+        return super(AutoSetSelectedOrganizationMixin, self).form_valid(form)
 
 
 class AbstractSaleCreateUpdateMixin(RestrictToOrganizationFormRelationsMixin,
@@ -108,7 +108,7 @@ class AbstractSaleCreateUpdateMixin(RestrictToOrganizationFormRelationsMixin,
 
     def get_context_data(self, **kwargs):
         assert self.formset_class is not None, "No formset class specified"
-        context = super().get_context_data(**kwargs)
+        context = super(AbstractSaleCreateUpdateMixin, self).get_context_data(**kwargs)
         orga = organization_manager.get_selected_organization(self.request)
         if self.request.POST:
             context['line_formset'] = self.formset_class(
@@ -123,7 +123,7 @@ class AbstractSaleCreateUpdateMixin(RestrictToOrganizationFormRelationsMixin,
 
     def get_form(self, form_class=None):
         """Restrict the form relations to the current organization"""
-        form = super().get_form(form_class)
+        form = super(AbstractSaleCreateUpdateMixin, self).get_form(form_class)
         orga = organization_manager.get_selected_organization(self.request)
         self.restrict_fields_choices_to_organization(form, orga)
         return form
@@ -132,7 +132,7 @@ class AbstractSaleCreateUpdateMixin(RestrictToOrganizationFormRelationsMixin,
         context = self.get_context_data()
         line_formset = context['line_formset']
         if not line_formset.is_valid():
-            return super().form_invalid(form)
+            return super(AbstractSaleCreateUpdateMixin, self).form_invalid(form)
 
         self.object = form.save()
         line_formset.instance = self.object
@@ -141,13 +141,13 @@ class AbstractSaleCreateUpdateMixin(RestrictToOrganizationFormRelationsMixin,
         # update totals
         self.object.compute_totals()
 
-        return super().form_valid(form)
+        return super(AbstractSaleCreateUpdateMixin, self).form_valid(form)
 
 
 class AbstractSaleDetailMixin(object):
 
     def get_queryset(self):
-        queryset = super().get_queryset()
+        queryset = super(AbstractSaleDetailMixin, self).get_queryset()
         queryset = queryset.select_related('organization')
 
         try:
@@ -164,12 +164,12 @@ class AbstractSaleDetailMixin(object):
         if hasattr(self, '_object'):
             return getattr(self, '_object')
 
-        obj = super().get_object()
+        obj = super(AbstractSaleDetailMixin, self).get_object()
         setattr(self, '_object', obj)
         return obj
 
     def get_context_data(self, **kwargs):
-        ctx = super().get_context_data(**kwargs)
+        ctx = super(AbstractSaleDetailMixin, self).get_context_data(**kwargs)
         obj = self.get_object()
         ctx["checklist"] = obj.full_check()
         ctx["lines"] = (obj.lines.all()
@@ -185,7 +185,7 @@ class PaymentFormMixin(generic.edit.FormMixin):
         assert self.payment_form_class is not None, \
             "No formset class specified"
         self.object = self.get_object()
-        context = super().get_context_data(**kwargs)
+        context = super(PaymentFormMixin, self).get_context_data(**kwargs)
         form = self.get_form(self.payment_form_class)
         context['payment_form'] = form
         return context
@@ -208,4 +208,4 @@ class PaymentFormMixin(generic.edit.FormMixin):
         payment = form.save(commit=False)
         payment.content_object = self.object
         payment.save()
-        return super().form_valid(form)
+        return super(PaymentFormMixin, self).form_valid(form)

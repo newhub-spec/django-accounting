@@ -29,7 +29,7 @@ class TimePeriodFormMixin(object):
     period = None
 
     def get_initial(self):
-        initial = super().get_initial()
+        initial = super(TimePeriodFormMixin, self).get_initial()
 
         # currrent quarter
         now = timezone.now()
@@ -46,7 +46,7 @@ class TimePeriodFormMixin(object):
         return initial
 
     def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
+        kwargs = super(TimePeriodFormMixin, self).get_form_kwargs()
         if self.request.GET:
             kwargs.update({
                 'data': self.request.GET,
@@ -54,7 +54,7 @@ class TimePeriodFormMixin(object):
         return kwargs
 
     def get_context_data(self, **kwargs):
-        ctx = super().get_context_data(**kwargs)
+        ctx = super(TimePeriodFormMixin, self).get_context_data(**kwargs)
 
         form = ctx['form']
         if form.is_valid():
@@ -120,7 +120,7 @@ class TaxReportView(TimePeriodFormMixin,
     form_class = TimePeriodForm
 
     def get_context_data(self, **kwargs):
-        ctx = super().get_context_data(**kwargs)
+        ctx = super(TaxReportView, self).get_context_data(**kwargs)
         orga = organization_manager.get_selected_organization(self.request)
         report = TaxReport(orga,
                            start=self.period.start,
@@ -134,7 +134,7 @@ class ProfitAndLossReportView(generic.TemplateView):
     template_name = "reports/profit_and_loss_report.html"
 
     def get_context_data(self, **kwargs):
-        ctx = super().get_context_data(**kwargs)
+        ctx = super(ProfitAndLossReportView, self).get_context_data(**kwargs)
         orga = organization_manager.get_selected_organization(self.request)
 
         # currrent quarter
@@ -159,7 +159,7 @@ class PayRunReportView(TimePeriodFormMixin,
     form_class = TimePeriodForm
 
     def get_context_data(self, **kwargs):
-        ctx = super().get_context_data(**kwargs)
+        ctx = super(PayRunReportView, self).get_context_data(**kwargs)
         orga = organization_manager.get_selected_organization(self.request)
 
         report = PayRunReport(orga,
@@ -178,7 +178,7 @@ class InvoiceDetailsView(TimePeriodFormMixin,
     form_class = TimePeriodForm
 
     def get_context_data(self, **kwargs):
-        ctx = super().get_context_data(**kwargs)
+        ctx = super(InvoiceDetailsView, self).get_context_data(**kwargs)
         orga = organization_manager.get_selected_organization(self.request)
         report = InvoiceDetailsReport(orga,
                                       start=self.period.start,

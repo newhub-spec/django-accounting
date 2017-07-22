@@ -47,7 +47,7 @@ class OrganizationSelectorView(generic.TemplateView):
     template_name = "books/organization_selector.html"
 
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
+        context = super(OrganizationSelectorView, self).get_context_data(**kwargs)
 
         user = self.request.user
         orgas = organization_manager.get_user_organizations(user)
@@ -77,7 +77,7 @@ class DashboardView(generic.DetailView):
         return organization_manager.get_selected_organization(self.request)
 
     def get_context_data(self, **kwargs):
-        ctx = super().get_context_data(**kwargs)
+        ctx = super(DashboardView, self).get_context_data(**kwargs)
         organization = self.get_object()
         ctx['invoices'] = (organization.invoices.all()
             .select_related(
@@ -103,7 +103,7 @@ class DashboardView(generic.DetailView):
         orga = organization_manager.get_selected_organization(self.request)
         if orga is None:
             return HttpResponseRedirect(reverse('books:organization-selector'))
-        return super().get(request, *args, **kwargs)
+        return super(DashboardView, self).get(request, *args, **kwargs)
 
 
 class OrganizationListView(generic.ListView):
@@ -125,7 +125,7 @@ class OrganizationCreateView(generic.CreateView):
     def form_valid(self, form):
         obj = form.save(commit=False)
         obj.owner = self.request.user
-        return super().form_valid(form)
+        return super(OrganizationCreateView, self).form_valid(form)
 
 
 class OrganizationUpdateView(generic.UpdateView):
@@ -149,7 +149,7 @@ class OrganizationDetailView(generic.DetailView):
         return organization_manager.get_user_organizations(self.request.user)
 
     def get_context_data(self, **kwargs):
-        ctx = super().get_context_data(**kwargs)
+        ctx = super(OrganizationDetailView, self).get_context_data(**kwargs)
         organization = self.get_object()
         ctx['invoices'] = (organization.invoices.all()
             .select_related('client', 'organization')
@@ -249,7 +249,7 @@ class EstimateCreateView(AutoSetSelectedOrganizationMixin,
         return form
 
     def get_initial(self):
-        initial = super().get_initial()
+        initial = super(EstimateCreateView, self).get_initial()
 
         orga = organization_manager.get_selected_organization(self.request)
         initial['number'] = EstimateNumberGenerator().next_number(orga)
@@ -301,13 +301,13 @@ class InvoiceCreateView(AutoSetSelectedOrganizationMixin,
     success_url = reverse_lazy("books:invoice-list")
 
     def get_form(self, form_class=None):
-        form = super().get_form(form_class)
+        form = super(InvoiceCreateView, self).get_form(form_class)
         orga = organization_manager.get_selected_organization(self.request)
         self.restrict_fields_choices_to_organization(form, orga)
         return form
 
     def get_initial(self):
-        initial = super().get_initial()
+        initial = super(InvoiceCreateView, self).get_initial()
 
         orga = organization_manager.get_selected_organization(self.request)
         initial['number'] = InvoiceNumberGenerator().next_number(orga)
@@ -361,13 +361,13 @@ class BillCreateView(AutoSetSelectedOrganizationMixin,
     success_url = reverse_lazy("books:bill-list")
 
     def get_form(self, form_class=None):
-        form = super().get_form(form_class)
+        form = super(BillCreateView, self).get_form(form_class)
         orga = organization_manager.get_selected_organization(self.request)
         self.restrict_fields_choices_to_organization(form, orga)
         return form
 
     def get_initial(self):
-        initial = super().get_initial()
+        initial = super(BillCreateView, self).get_initial()
 
         orga = organization_manager.get_selected_organization(self.request)
         initial['number'] = BillNumberGenerator().next_number(orga)
@@ -421,13 +421,13 @@ class ExpenseClaimCreateView(AutoSetSelectedOrganizationMixin,
     success_url = reverse_lazy("books:expense_claim-list")
 
     def get_form(self, form_class=None):
-        form = super().get_form(form_class)
+        form = super(ExpenseClaimCreateView, self).get_form(form_class)
         orga = organization_manager.get_selected_organization(self.request)
         self.restrict_fields_choices_to_organization(form, orga)
         return form
 
     def get_initial(self):
-        initial = super().get_initial()
+        initial = super(ExpenseClaimCreateView, self).get_initial()
 
         orga = organization_manager.get_selected_organization(self.request)
         initial['number'] = ExpenseClaimNumberGenerator().next_number(orga)

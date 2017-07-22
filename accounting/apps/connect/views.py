@@ -25,6 +25,8 @@ class RootRedirectionView(generic.View):
     def get(self, *args, **kwargs):
         if Organization.objects.all().count():
             return HttpResponseRedirect(reverse('books:dashboard'))
+        else:
+            return HttpResponseRedirect(reverse('connect:getting-started'))
 
 
 class GettingStartedView(generic.TemplateView):
@@ -45,7 +47,7 @@ class GettingStartedView(generic.TemplateView):
         return steps
 
     def get_context_data(self, **kwargs):
-        ctx = super().get_context_data(**kwargs)
+        ctx = super(GettingStartedView, self).get_context_data(**kwargs)
 
         request = self.request
         steps = self.get_steps(self.request)
@@ -69,7 +71,7 @@ class GettingStartedView(generic.TemplateView):
         steps = self.get_steps(request)
         uncompleted_steps = filter(lambda s: not s.completed(request), steps)
         if not len(uncompleted_steps):
-            return super().post(request, *args, **kwargs)
+            return super(GettingStartedView, self).post(request, *args, **kwargs)
 
         # unmark the session as getting started
         request.sessions['getting_started_done'] = True
