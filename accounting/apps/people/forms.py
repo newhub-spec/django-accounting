@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 
 from .models import Client, Employee
 
-from django_select2 import ModelSelect2Widget, ModelSelect2MultipleWidget
+from django_select2.forms import ModelSelect2Widget, ModelSelect2MultipleWidget
 
 
 class ClientForm(ModelForm):
