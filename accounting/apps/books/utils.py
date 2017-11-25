@@ -1,5 +1,13 @@
 from django.db.models import Q
+from django.http import HttpResponseRedirect
+from django.core.urlresolvers import reverse
 
+def NoneTest(value):
+    if value is None:
+        value = 0
+        return value
+    else:
+        return value
 
 class OrganizationManager(object):
     selected_organization_key = 'selected_organization_pk'
@@ -20,7 +28,7 @@ class OrganizationManager(object):
     def get_selected_organization(self, request):
         key = self.selected_organization_key
         if key not in request.session:
-            return
+            return HttpResponseRedirect(reverse('books:organization-selector'))
 
         # To avoid circular imports
         from .models import Organization

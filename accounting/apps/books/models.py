@@ -20,6 +20,7 @@ from .managers import (
     InvoiceQuerySet,
     BillQuerySet,
     ExpenseClaimQuerySet)
+from .utils import NoneTest
 
 TWO_PLACES = D(10) ** -2
 
@@ -83,6 +84,8 @@ class Organization(models.Model):
         due_invoices = self.invoices.dued()
         due_turnonver = due_invoices.turnover_incl_tax()
         total_paid = due_invoices.total_paid()
+        due_turnonver = NoneTest(due_turnonver)
+        total_paid = NoneTest(total_paid)
         return due_turnonver - total_paid
 
 

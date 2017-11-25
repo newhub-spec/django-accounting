@@ -4,7 +4,7 @@ from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 
 from .utils import organization_manager
-
+from .forms import PaymentForm
 
 class RestrictToSelectedOrganizationQuerySetMixin(object):
     """
@@ -13,12 +13,16 @@ class RestrictToSelectedOrganizationQuerySetMixin(object):
 
     def get_restriction_filters(self):
         # check for the field
-        meta = self.model._meta
-        field, model, direct, m2m = meta.get_field_by_name('organization')
+        f = self.model._meta.get_field('organization')
+        field = f.name
+        m = f.model
+        if not f.auto_created or f.concrete:
+            direct = f
+        m2m = f.many_to_many
 
         # build the restriction
         orga = organization_manager.get_selected_organization(self.request)
-        return {field.name: orga.pk}
+        return {field: orga.pk}
 
     def get_queryset(self):
         filters = self.get_restriction_filters()
@@ -41,15 +45,20 @@ class RestrictToOrganizationFormRelationsMixin(object):
 
     def _restrict_fields_choices(self, model, organization, fields):
         for source in fields:
-            field, m, direct, m2m = model._meta.get_field_by_name(source)
-            rel = field.rel
+            f = model._meta.get_field(source)
+            field = f.name
+            m = f.model
+            if not f.auto_created or f.concrete:
+                direct = f
+            m2m = f.many_to_many
+            rel = f.remote_field
             if not rel:
                 # next field
                 continue
 
             rel_model = rel.to
             try:
-                rel_model._meta.get_field_by_name(self.relation_name)
+                rel_model._meta.get_field(self.relation_name)
             except FieldDoesNotExist:
                 # next field
                 continue
@@ -77,14 +86,14 @@ class SaleListQuerySetMixin(object):
 
         try:
             # to raise the exception
-            self.model._meta.get_field_by_name('client')
+            self.model._meta.get_field('client')
             queryset = queryset.select_related('client')
         except FieldDoesNotExist:
             pass
 
         try:
             # to raise the exception
-            self.model._meta.get_field_by_name('payments')
+            self.model._meta.get_field('payments')
             queryset = queryset.prefetch_related('payments')
         except FieldDoesNotExist:
             pass
@@ -152,7 +161,7 @@ class AbstractSaleDetailMixin(object):
 
         try:
             # to raise the exception
-            self.model._meta.get_field_by_name('client')
+            self.model._meta.get_field('client')
             queryset = queryset.select_related('client')
         except FieldDoesNotExist:
             pass
@@ -180,13 +189,14 @@ class AbstractSaleDetailMixin(object):
 
 class PaymentFormMixin(generic.edit.FormMixin):
     payment_form_class = None
+    form_class = PaymentForm
 
     def get_context_data(self, **kwargs):
         assert self.payment_form_class is not None, \
             "No formset class specified"
         self.object = self.get_object()
-        context = super(PaymentFormMixin, self).get_context_data(**kwargs)
         form = self.get_form(self.payment_form_class)
+        context = super(PaymentFormMixin, self).get_context_data(**kwargs)
         context['payment_form'] = form
         return context
 

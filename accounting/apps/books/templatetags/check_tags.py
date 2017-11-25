@@ -16,8 +16,4 @@ class Check(InclusionTag):
     )
 
     def get_context(self, context, check):
-        context.update({
-            'check': check
-        })
-
-        return context
+        return { 'check': check }

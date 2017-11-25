@@ -48,7 +48,7 @@ class TaxReport(BaseReport):
     tax_summaries = None
 
     def __init__(self, organization, start, end):
-        super().__init__("Tax Report", start, end)
+        super(TaxReport, self).__init__("Tax Report", start, end)
         self.organization = organization
         self.tax_summaries = defaultdict(TaxRateSummary)
 
@@ -99,7 +99,7 @@ class ProfitAndLossReport(BaseReport):
     group_by_resolution = RESOLUTION_MONTHLY
 
     def __init__(self, organization, start, end):
-        super().__init__("Profit and Loss", start, end)
+        super(ProfitAndLossReport, self).__init__("Profit and Loss", start, end)
         self.organization = organization
         self.summaries = {}
         steps_interval = relativedelta(end, start)
@@ -171,7 +171,7 @@ class PayRunReport(BaseReport):
     total_payroll_taxes = D('0')
 
     def __init__(self, organization, start, end):
-        super().__init__("Pay Run Report", start, end)
+        super(PayRunReport, self).__init__("Pay Run Report", start, end)
         self.organization = organization
         self.summaries = defaultdict(PayRunSummary)
 
@@ -209,7 +209,7 @@ class InvoiceDetailsReport(BaseReport):
     tax_rates = None
 
     def __init__(self, organization, start, end):
-        super().__init__("Pay Run Report", start, end)
+        super(InvoiceDetailsReport, self).__init__("Pay Run Report", start, end)
         self.organization = organization
         self.tax_rates = organization.tax_rates.all()
 

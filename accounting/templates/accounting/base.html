@@ -12,8 +12,10 @@
 
         <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
-        <link rel="stylesheet" href="{% static 'bootstrap/dist/css/bootstrap.css' %}">
-        <link rel="stylesheet" href="{% static 'bootstrap/dist/css/bootstrap-theme.css' %}">
+        <link href="{% static "assets/css/bootstrap.min.css" %}" rel="stylesheet">
+        <link href="{% static "assets/css/style.css" %}" rel="stylesheet">
+        <link href="{% static "assets/css/style-responsive.css" %}" rel="stylesheet">
+        <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/smoothness/jquery-ui.css" />
 
         <style>
             @import url(http://fonts.googleapis.com/css?family=Bree+Serif);
@@ -34,7 +36,9 @@
           <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
         <![endif]-->
 
-        <script src="{% static 'modernizr/modernizr.js' %}"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
+        <link rel="stylesheet" href="{% static 'assets/third/datepicker/css/datepicker.css' %}">
+        <script src="{% static 'assets/third/datepicker/js/bootstrap-datepicker.js' %}"></script>
 
         {% block head %}{% endblock %}
     </head>
@@ -46,8 +50,8 @@
         {% block maincontent %}{% endblock %}
 
         {% block scripts %}
-            <script src="{% static 'jquery/dist/jquery.js' %}"></script>
-            <script src="{% static 'bootstrap/dist/js/bootstrap.min.js' %}"></script>
+            <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+            <script src="{% static "assets/js/bootstrap.min.js" %}"></script>
             <script src="{% static 'accounting/js/main.js' %}"></script>
         {% endblock %}
     </body>

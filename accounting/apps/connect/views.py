@@ -1,6 +1,7 @@
 from django.views import generic
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from accounting.apps.books.models import Organization
 from .steps import (
@@ -28,8 +29,7 @@ class RootRedirectionView(generic.View):
         else:
             return HttpResponseRedirect(reverse('connect:getting-started'))
 
-
-class GettingStartedView(generic.TemplateView):
+class GettingStartedView(LoginRequiredMixin, generic.TemplateView):
     template_name = "connect/getting_started.html"
 
     def get_steps(self, request):

@@ -76,7 +76,7 @@ class CheckingModelMixin(object):
     _options_class = CheckingModelOptions
 
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+        super(CheckingModelMixin, self).__init__(*args, **kwargs)
         self.opts = self._options_class(getattr(self, 'CheckingOptions', None))
 
     def has_custom_check_for_field(self, field_name):
@@ -122,7 +122,12 @@ class CheckingModelMixin(object):
             ret[f.attname] = f
 
         # Deal with reverse relationships
-        reverse_rels = self._meta.get_all_related_objects()
+        reverse_rels = [
+            f for f in self._meta.get_fields()
+            if (f.one_to_many or f.one_to_one)
+            and f.auto_created and not f.concrete
+        ]
+
         # reverse_rels += self._meta.get_all_related_many_to_many_objects()
         for relation in reverse_rels:
             accessor_name = relation.get_accessor_name()

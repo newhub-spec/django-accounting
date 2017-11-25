@@ -4,8 +4,6 @@
     {{ block.super }}
 
     {# NB: because the payment form is a subform it won't output the correct assets, so we explicitly put it there #}
-    <link rel="stylesheet" href="{% static 'css/datetimepicker.css' %}">
-    <script src="{% static 'js/bootstrap-datetimepicker.js' %}"></script>
 
     {{ form.media }}
 {% endblock %}

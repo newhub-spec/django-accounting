@@ -38,7 +38,7 @@ setup(name='django-accounting',
           # Used for date/time form fields
           'django-datetime-widget>=0.9,<1.0',
           # Define beautiful tags
-          'django-classy-tags==0.5.1',
+          'django-classy-tags==0.8.0',
           # Internationalization
           'Babel>=1.0,<1.4',
           # Date utilities
