@@ -42,9 +42,7 @@ setup(name='django-accounting',
           # Internationalization
           'Babel>=1.0,<1.4',
           # Date utilities
-          'python-dateutil>=2.2,<2.3',
-          # Select2
-          'django-select2>=4.3,<4.4',
+          'python-dateutil>=2.2,<2.3',          
       ],
       # See http://pypi.python.org/pypi?%3Aaction=list_classifiers
       classifiers=[
@@ -58,5 +56,6 @@ setup(name='django-accounting',
           'Programming Language :: Python :: 3',
           'Programming Language :: Python :: 3.3',
           'Programming Language :: Python :: 3.4',
+          'Programming Language :: Python :: 3.8',
           'Topic :: Software Development :: Libraries :: Application Frameworks']
       )
